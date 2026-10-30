@@ -1,0 +1,17 @@
+AI381 Lab 1 · Pain log
+Name:Jawad abualshar                Student ID: 161735            Date: 13/10/2026
+
+Start the stopwatch before you open the notebook. One line per step.
+
+Step               | Minutes | What failed or slowed me down        | Question I could not answer
+-------------------|---------|---------------------------------------|----------------------------
+Round 1 (train)    |22*      |Combined Round 1 time; I did not record separate times for train, serve, and curl.                                       |
+Round 1 (serve)    |         |                                       |
+Round 1 (3 x curl) |         |                                       |
+Twist 1 (v2 data)  |12       | KeyError: monthly_charges renamed to monthly_fee; updated notebook, API and request file                                     |
+Twist 2 (fresh env)|23       | No new failure; rebuilt cleanly after installing python3.14-venv.                                      |
+Twist 3 (version?) |3        | Health endpoint shows only status, not the model version.                                     |
+-------------------|---------|---------------------------------------|----------------------------
+Total              |60         | Number of failures:2
+The one thing I would automate first, and why:
+I would automate training and deployment. It would catch data changes and show the model version. This saves time and avoids errors.
