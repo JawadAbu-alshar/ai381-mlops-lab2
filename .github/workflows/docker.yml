@@ -1,4 +1,4 @@
-name: Docker Build
+name: Docker Build and Security Scan
 
 on:
   pull_request:
@@ -16,3 +16,13 @@ jobs:
 
       - name: Build Docker image
         run: docker build -f Docker/Dockerfile -t ai381-churn:${{ github.sha }} .
+
+      - name: Scan Docker image with Trivy
+        run: |
+          docker run --rm \
+            -v /var/run/docker.sock:/var/run/docker.sock \
+            aquasec/trivy:0.67.2 image \
+            --exit-code 1 \
+            --severity HIGH,CRITICAL \
+            --ignore-unfixed \
+            ai381-churn:${{ github.sha }}
