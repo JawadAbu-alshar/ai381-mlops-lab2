@@ -12,6 +12,7 @@ RUN python -m venv /opt/venv \
 
 # Stage 2: Runtime
 FROM python:3.14.4-slim AS runtime
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
