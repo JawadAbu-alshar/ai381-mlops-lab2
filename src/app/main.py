@@ -42,4 +42,5 @@ def predict(customer: CustomerInput):
     # Predict churn probability
     probability = float(model.predict_proba(X)[0, 1])
 
+
     return {"churn_probability": round(probability, 3)}
