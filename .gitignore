@@ -22,3 +22,13 @@ __pycache__/
 # Operating system files
 .DS_Store
 Thumbs.db
+
+# Lab 3 MLflow artifacts
+artifacts/*
+!artifacts/.gitkeep
+!artifacts/champion.json
+!artifacts/metadata.json
+!artifacts/model.joblib
+mlflow.db
+mlruns/
+mlartifacts/
