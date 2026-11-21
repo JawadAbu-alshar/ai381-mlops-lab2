@@ -1,4 +1,5 @@
-
+import json
+import os
 from pathlib import Path
 from typing import Literal
 
@@ -7,18 +8,16 @@ import pandas as pd
 from fastapi import FastAPI
 from pydantic import BaseModel, Field
 
-# Project root and saved model path
 ROOT = Path(__file__).resolve().parents[2]
 MODEL_PATH = ROOT / "model.joblib"
+METADATA_PATH = ROOT / "metadata.json"
 
-# Load the trained model
 model = joblib.load(MODEL_PATH)
+metadata = json.loads(METADATA_PATH.read_text()) if METADATA_PATH.exists() else {}
 
-# Create the FastAPI application
-app = FastAPI(title="AI381 Lab 2 Churn API")
+app = FastAPI(title="AI381 Lab 3 Churn API")
 
 
-# Request schema with Pydantic validation
 class CustomerInput(BaseModel):
     tenure_months: int = Field(ge=0)
     monthly_fee: float = Field(ge=0)
@@ -27,20 +26,17 @@ class CustomerInput(BaseModel):
     support_calls: int = Field(ge=0)
 
 
-# Health endpoint
 @app.get("/health")
 def health():
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "model_version": os.getenv("GIT_SHA", metadata.get("model_version", "unknown"))[:7],
+        "mlflow_run_id": metadata.get("mlflow_run_id", "unknown"),
+    }
 
 
-# Prediction endpoint
 @app.post("/predict")
 def predict(customer: CustomerInput):
-    # Convert validated input into a DataFrame
     X = pd.DataFrame([customer.model_dump()])
-
-    # Predict churn probability
     probability = float(model.predict_proba(X)[0, 1])
-
-
     return {"churn_probability": round(probability, 3)}

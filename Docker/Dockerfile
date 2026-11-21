@@ -1,6 +1,4 @@
-
-# Stage 1: Build dependencies
-FROM python:3.14.4-slim AS builder
+FROM python:3.12-slim AS builder
 
 WORKDIR /app
 
@@ -10,20 +8,23 @@ RUN python -m venv /opt/venv \
     && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 
-# Stage 2: Runtime
-FROM python:3.14.4-slim AS runtime
+FROM python:3.12-slim AS runtime
+
 RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 COPY --from=builder /opt/venv /opt/venv
-
 COPY src/ ./src/
-COPY model.joblib ./model.joblib
+COPY artifacts/model.joblib ./model.joblib
+COPY artifacts/metadata.json ./metadata.json
+
+ARG GIT_SHA=local
 
 ENV PATH="/opt/venv/bin:$PATH" \
     PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+    PYTHONUNBUFFERED=1 \
+    GIT_SHA=$GIT_SHA
 
 RUN useradd --create-home appuser
 
